@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" 
+    integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g==" 
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="style.css">
+    <script src="script.js" defer ></script>
+    <title> Image Editor </title>
+</head>
+<body>
+    <div class="canvas-container">
+        <canvas id="canvas"></canvas>
+    </div>
+    
+    <div class="buttons">
+        <div class="file-input-div">
+            <input type="file" id="file-input" accept="image/jpeg" >
+            <label for="file-input"> Select Image </label>
+            <div class="file-name"></div>
+        </div>
+        <div class="fixed-buttons">
+            <button class="original-image button" disabled> Original Image </button>
+            <button class="download button" disabled>Download <i class="fa-solid fa-download"></i> </button> 
+        </div>
+        <div class="tabs-div">
+            <ul class="tabs">
+                <li data-tab-target="#one" class="tab active tools"> <i class="fa-solid fa-gear"></i> &nbsp; Tools </li>
+                <li data-tab-target="#two" class="tab filters"> <i class="fa-solid fa-wand-magic-sparkles"></i> &nbsp; Filters </li>
+            </ul>
+            
+            <div class="tab-content">
+                <div id="one" data-tab-content class="active">
+                    <div>
+                        <button class="tool-button flip-columns button" disabled > Flip Columns </button>
+                    </div>
+                    
+                    <div>
+                        <button class="tool-button flip-rows button" disabled > Flip Rows </button>
+                    </div>        
+                    
+                    <div>
+                        <button class="tool-button rotate180 button" disabled > Rotate 180 </button>
+                    </div>        
+                    
+                    <div>
+                        <button class="tool-button blur button" disabled > Blur </button>
+                    </div>        
+                   
+                    <div>
+                        <label for="brightness-btn"> Brightness </label>
+                        <input type="range" disabled  name="brightness" class="tool-button button brightness" id="brightness-btn" step="1" min="0" max="100" value="50">
+                    </div>
+
+                    <div>
+                        <label for="opacity-btn"> Opacity </label>
+                        <input type="range" disabled  name="opacity" class="tool-button button opacity" id="opacity-btn" step="1" min="0" max="255" value="255">
+                    </div>
+                </div>
+                <div id="two" data-tab-content>
+                    <div>
+                        <button class="filter-button button apply-changes" disabled > Apply Changes </button>
+                    </div>
+                    <div >
+                        <button class="filter-button button red" disabled  > Red </button>
+                    </div>
+                    
+                    <div >
+                        <button class="filter-button button green" disabled  > Green </button>
+                    </div>
+                    
+                    <div >
+                        <button class="filter-button button blue" disabled  > Blue </button>
+                    </div>
+                    <div>
+                        <button class="filter-button button negative" disabled > Negative </button>
+                    </div> 
+                    <div>
+                        <button class="filter-button button grayscale" disabled > Grayscale </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,183 @@
+button {
+    cursor : pointer;
+    border : none;
+}
+
+body {
+    margin : 0;
+    padding : 0;
+    display : flex;
+    align-items : center;
+    justify-content : center;
+    width : 100vw;
+    height : 100vh;
+}
+
+.canvas-container {
+    background-color : gray;
+    height : 100%;
+    width : 70%;
+}
+
+.buttons {
+    height : 100%;
+    width : 30%;
+    display : flex;
+    flex-direction :column;
+    align-items : center;
+    justify-content : flex-start;
+}
+
+.file-input-div, .fixed-buttons {
+    width : 100%;
+    height : 10%;
+}
+
+/* image input button style */
+.file-input-div {
+    display : flex;
+    align-items : center;
+    justify-content : center;
+}
+#file-input {
+    width: 0.1px;
+    height: 0.1px;
+    opacity: 0;
+    overflow: hidden;
+    position: absolute;
+    z-index: -1;
+}
+#file-input + label {
+    width : 30%;
+    height : 93%;
+    background-color: cornflowerblue;
+    border: 3px solid cornflowerblue;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    font-size : 1.2rem;
+    font-weight: bold;
+    cursor: pointer;
+}
+#file-input + label:hover {
+    border-color: rgb(79, 120, 196);
+    background-color: rgb(79, 120, 196);
+}
+.file-name {
+    width: 69%;
+    height: 93%;
+    font-size: 1.2rem;
+    overflow: hidden;
+    text-align: center;
+}
+
+/* original image button and download button */
+.fixed-buttons {
+    display : flex;
+    align-items : center;
+    justify-content : space-around;
+}
+.original-image, .download {
+    height : 100%;
+    width : 50%;
+}
+.original-image {
+    background-color : rgb(236, 2, 2);
+    color : white;
+    font-size : 20px;
+}
+.original-image:hover {
+    background-color : rgb(215, 5, 5);
+}
+.download {
+    background-color : rgb(0, 152, 0);
+    color : white;
+    font-size : 20px;
+}
+.download:hover {
+    background-color: rgb(0, 107, 0);
+}
+
+
+/* tabs */
+.tabs-div {
+    width : 100%;
+    height : 80%;
+}
+.active[data-tab-content] {
+    width : 100%;
+    height : 100%;
+    display : flex;
+    flex-direction : column;
+    align-items : center;
+    justify-content : flex-start;
+    
+}
+.active[data-tab-content] div {
+    margin-top: 20px;
+    align-items : center;
+}
+
+[data-tab-content] {
+    display : none;
+}
+.tabs {
+    display : flex;
+    align-items : center;
+    justify-content : space-around;
+    list-style-type : none;
+    margin : 0;
+    padding : 0;
+    height : 10%;
+}
+.tab-content {
+    background-color :rgb(147, 177, 233);
+    width : 100%;
+    height : 90%;
+}
+.tab {
+    cursor : pointer;
+    font-size : 30px;
+    width : 50%;
+    height : 100%;
+    border-radius : 15px 15px 0px 0px;
+    display : flex;
+    align-items : center;
+    justify-content : center;
+    border-bottom: 2px solid black;
+}
+.tab.active {
+    background-color : rgb(147, 177, 233);
+    border: 2px solid black;
+    border-bottom: none
+}
+.tab:hover {
+    background-color : cornflowerblue;
+}
+
+.tool-button, .filter-button {
+    width : 130px;
+    height : 30px;
+    font-size : 17px;
+    color : white;
+    background-color : rgb(4, 150, 179);
+    border-radius: 15px;
+}
+.tool-button:hover, .filter-button:hover {
+    background-color : rgb(3, 124, 148);
+}
+.apply-changes {
+    background-color: red;
+}
+.apply-changes:hover {
+    background-color: rgb(210, 5, 5);
+}
+
+/* canvas */
+.canvas-container {
+    overflow:scroll;
+    display : flex;
+    align-items : center;
+    justify-content : center;
+}
