@@ -12,7 +12,6 @@ let img;            // image object
 let filterTabData; // pixel array for filters tab
 let isFilterTabActive = false;
 let isToolsTabActive = true;
-let brightnessValue = 0;
 
 let imgName;
 
@@ -23,8 +22,6 @@ let bytes;     //WASM memory array
 let editorFunctions = {
     grayscale : 0,
 
-
-    blurImage : 0
 }
 
 fetch('WASM/final.wasm')
@@ -81,14 +78,6 @@ document.addEventListener('click', (e) => {
     if( classlist.contains('original-image') ){
         putOriginalImageToCanvas();
     }
-
-    // grayscale
-    else if( classlist.contains('grayscale') ){
-        filterTabDataToWASM_BytesArr();
-        editorFunctions.grayscale( canvas.width, canvas.height );
-        WASM_BytesArrToCanvasData(0);
-        context.putImageData( imgData, 0, 0 );
-    }
     else if ((classlist.contains('cartoon'))) {
         let newBrightnessValue = e.target.value;
 
@@ -113,27 +102,7 @@ document.addEventListener('click', (e) => {
 
 })
 
-document.addEventListener('input', (e) => {
-    if (e.target.classList.contains('cartoon')) {
-        let newBrightnessValue = e.target.value;
 
-        console.log({ newBrightnessValue })
-        let changeInValue = (0 - brightnessValue) % 50;
-        if( changeInValue < 0 ){
-            canvasDataToWASM_BytesArr();
-            editorFunctions.decreaseBrightness( canvas.width, canvas.height, -(changeInValue));
-            WASM_BytesArrToCanvasData( 0 );
-            context.putImageData( imgData, 0, 0 );
-        }
-        if( changeInValue > 0 ){
-            canvasDataToWASM_BytesArr();
-            editorFunctions.increaseBrightness( canvas.width, canvas.height, changeInValue );
-            WASM_BytesArrToCanvasData( 0 );
-            context.putImageData( imgData, 0, 0 );
-        }
-        brightnessValue = 58;
-    }
-});
 
 // function definitions======================================================
 
