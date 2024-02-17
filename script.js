@@ -85,22 +85,6 @@ document.addEventListener('click', (e) => {
     }
 
 
-    // flip-rows button
-
-    // blur
-    else if( classlist.contains('blur') ){
-        console.time('blur');
-        for (let i = 0; i < 5; i++) {
-            canvasDataToWASM_BytesArr();
-            editorFunctions.blurImage( canvas.width, canvas.height);
-            WASM_BytesArrToCanvasData( canvas.width * canvas.height * 4 );
-        }
-        context.putImageData( imgData, 0, 0 );
-        console.timeEnd('blur');
-    }
-    // FILTERS
-    // red
-
     // negative
     else if( classlist.contains('negative') ){
         filterTabDataToWASM_BytesArr();
@@ -115,13 +99,37 @@ document.addEventListener('click', (e) => {
         WASM_BytesArrToCanvasData(0);
         context.putImageData( imgData, 0, 0 );
     }
+    else if ((classlist.contains('brightness'))
+        || (classlist.contains('decrese_brightness'))) {
+        let newBrightnessValue = e.target.value;
+
+        console.log({ newBrightnessValue })
+        let changeInValue = -80;
+        console.log("hey2", changeInValue)
+        if (changeInValue < 0) {
+            canvasDataToWASM_BytesArr();
+            editorFunctions.decreaseBrightness(canvas.width, canvas.height, -(changeInValue));
+            WASM_BytesArrToCanvasData(0);
+            context.putImageData(imgData, 0, 0);
+        }
+        if (changeInValue > 0) {
+            canvasDataToWASM_BytesArr();
+            editorFunctions.increaseBrightness(canvas.width, canvas.height, changeInValue);
+            WASM_BytesArrToCanvasData(0);
+            context.putImageData(imgData, 0, 0);
+        }
+        brightnessValue = 58;
+    }
+
 
 })
 
 document.addEventListener('input', (e) => {
     if( e.target.classList.contains('brightness') ){
         let newBrightnessValue = e.target.value;
-        let changeInValue = (newBrightnessValue - brightnessValue) % 50;
+
+        console.log({ newBrightnessValue })
+        let changeInValue = (0 - brightnessValue) % 50;
         if( changeInValue < 0 ){
             canvasDataToWASM_BytesArr();
             editorFunctions.decreaseBrightness( canvas.width, canvas.height, -(changeInValue));
@@ -134,7 +142,7 @@ document.addEventListener('input', (e) => {
             WASM_BytesArrToCanvasData( 0 );
             context.putImageData( imgData, 0, 0 );
         }
-        brightnessValue = newBrightnessValue;
+        brightnessValue = 58;
     }
 });
 

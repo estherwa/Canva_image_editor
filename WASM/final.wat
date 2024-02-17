@@ -3,10 +3,9 @@
 
     (export "convertToGrayscale" (func $convertToGrayscale))
     (export "negative" (func $negative))
-    (export  "increase_brightness" (func $increase_brightness))
+    (export  "brightness" (func $increase_brightness))
     (export  "decrease_brightness" (func $decrease_brightness))
 
-    (export "blur" (func $blur3x3))
 
 
     (func $convertToGrayscale (param $width i32) (param $height i32)
@@ -167,8 +166,7 @@
     )
 
     
-    
-    (func $increase_brightness (param $width i32) (param $height i32) (param $increase_by i32)
+    (func $brightness (param $width i32) (param $height i32) (param $increase_by i32)
         ;; local
         (local $len i32) (local $i i32)
 
@@ -386,11 +384,7 @@
         end
     )
 
- 
 
-
-    
-    
     (func $swap_pixels (param $px1_index i32) (param $px2_index i32) (local $temp i32)
         ;; swap red
             ;; temp = px1
@@ -484,10 +478,6 @@
         local.get $temp
         i32.store8             ;; stack empty
     )
-
-
-
- 
 
     ;; Utility functions
     (func $get_linear_index (param $row i32) (param $col i32) (param $width i32) (result i32)
