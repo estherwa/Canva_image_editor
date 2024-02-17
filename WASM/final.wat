@@ -2,10 +2,7 @@
     (import "js" "mem" (memory $mem 1))
 
     (export "convertToGrayscale" (func $convertToGrayscale))
-    (export "negative" (func $negative))
-    (export  "brightness" (func $increase_brightness))
-    (export  "decrease_brightness" (func $decrease_brightness))
-
+    (export  "cartoon" (func $cartoon))
 
 
     (func $convertToGrayscale (param $width i32) (param $height i32)
@@ -94,79 +91,9 @@
         end
     )
 
-    (func $negative (param $width i32) (param $height i32)
-        ;; locals
-        (local $len i32) (local $i i32) (local $temp i32)
-
-        ;; set len = width * height * 4
-        local.get $width
-        local.get $height
-        i32.const 4
-        i32.mul
-        i32.mul
-        local.set $len
-
-        ;; set i = 0
-        i32.const 0
-        local.set $i
-
-        loop
-            ;; get r, calculate its negative, store the negative
-            local.get $i
-
-            i32.const 255
-            local.get $i
-            i32.load8_u
-            i32.sub
-
-            i32.store8              ;; stack empty
-
-            ;; get g, calculate its negative, store the negative
-            local.get $i
-            i32.const 1
-            i32.add
-            local.set $temp
-
-            local.get $temp
-
-            i32.const 255
-            local.get $temp
-            i32.load8_u
-            i32.sub
-
-            i32.store8              ;; stack empty
-        
-            ;; get b, calculate its negative, store the negative
-            local.get $i
-            i32.const 2
-            i32.add
-            local.set $temp
-
-            local.get $temp
-
-            i32.const 255
-            local.get $temp
-            i32.load8_u
-            i32.sub
-
-            i32.store8      ;; stack empty
-
-            ;; increment i by 4
-            local.get $i
-            i32.const 4
-            i32.add
-            local.set $i    ;; stack empty
-
-            ;; exit if i < len is false
-            local.get $i
-            local.get $len
-            i32.lt_u
-            br_if 0            
-        end
-    )
 
     
-    (func $brightness (param $width i32) (param $height i32) (param $increase_by i32)
+    (func $cartoon (param $width i32) (param $height i32) (param $increase_by i32)
         ;; local
         (local $len i32) (local $i i32)
 
@@ -275,114 +202,7 @@
         end
 
     )
-    (func $decrease_brightness (param $width i32) (param $height i32) (param $decrease_by i32)
-        ;; local
-        (local $len i32) (local $i i32)
-
-        ;; set len = width * height * 4
-        local.get $width
-        local.get $height
-        i32.const 4
-        i32.mul
-        i32.mul
-        local.set $len                  ;; stack empty
-
-        ;; set i = 0
-        i32.const 0
-        local.set $i                    ;; stack empty
-
-        loop
-            ;; decrease brightness by subtracting the decrease_by constant to red, green and blue channel
-            (block $main
-                ;; if red = 0, then skip whole pixel
-                    local.get $i
-                    i32.load8_u
-                    
-                    local.get $decrease_by
-                    i32.sub
-
-                    i32.const 0
-                    i32.lt_s
-                    (if ( then br $main ) )
-
-                ;; if green = 0, then skip whole pixel
-                    local.get $i
-                    i32.const 1
-                    i32.add
-                    i32.load8_u
-                    
-                    local.get $decrease_by
-                    i32.sub
-
-                    i32.const 0
-                    i32.lt_s
-                    (if ( then br $main ) )
-
-                ;; if blue = 0, then skip whole pixel
-                    local.get $i
-                    i32.const 2
-                    i32.add
-                    i32.load8_u
-                    
-                    local.get $decrease_by
-                    i32.sub
-
-                    i32.const 0
-                    i32.lt_s
-                    (if ( then br $main ) )
-
-                ;; RED
-                    local.get $i
-
-                    local.get $i
-                    i32.load8_u
-                    local.get $decrease_by
-                    i32.sub
-
-                    i32.store8
-
-                ;; GREEN
-                    local.get $i
-                    i32.const 1
-                    i32.add
-                    
-                    local.get $i
-                    i32.const 1
-                    i32.add
-                    i32.load8_u
-                    local.get $decrease_by
-                    i32.sub
-
-                    i32.store8
-
-                ;; BLUE
-                    local.get $i
-                    i32.const 2
-                    i32.add
-                    
-                    local.get $i
-                    i32.const 2
-                    i32.add
-                    i32.load8_u
-                    local.get $decrease_by
-                    i32.sub
-
-                    i32.store8
-            )
-
-            ;; increment i by 4
-            local.get $i
-            i32.const 4
-            i32.add
-            local.set $i                ;; stack empty
-
-            ;; exit if i < len is false
-            local.get $i
-            local.get $len
-            i32.lt_s
-            br_if 0
-        end
-    )
+ 
 
 
     (func $swap_pixels (param $px1_index i32) (param $px2_index i32) (local $temp i32)

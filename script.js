@@ -22,9 +22,7 @@ let bytes;     //WASM memory array
 
 let editorFunctions = {
     grayscale : 0,
-    negative: 0,
-    decreaseBrightness : 0,
-    increaseBrightness : 0,
+
 
     blurImage : 0
 }
@@ -68,7 +66,7 @@ fileInput.addEventListener('change', (e) => {
             filterTabData = context.getImageData( 0, 0, canvas.width, canvas.height ).data;
             growMemory( canvas.width, canvas.height );
             canvasDataToWASM_BytesArr();
-            document.querySelector('.brightness').value = 50;
+            document.querySelector('.cartoon').value = 50;
             brightnessValue = 50;
             enableButtons();
         }
@@ -84,14 +82,6 @@ document.addEventListener('click', (e) => {
         putOriginalImageToCanvas();
     }
 
-
-    // negative
-    else if( classlist.contains('negative') ){
-        filterTabDataToWASM_BytesArr();
-        editorFunctions.negative( canvas.width, canvas.height );
-        WASM_BytesArrToCanvasData(0);
-        context.putImageData( imgData, 0, 0 );
-    }
     // grayscale
     else if( classlist.contains('grayscale') ){
         filterTabDataToWASM_BytesArr();
@@ -99,8 +89,7 @@ document.addEventListener('click', (e) => {
         WASM_BytesArrToCanvasData(0);
         context.putImageData( imgData, 0, 0 );
     }
-    else if ((classlist.contains('brightness'))
-        || (classlist.contains('decrese_brightness'))) {
+    else if ((classlist.contains('cartoon'))) {
         let newBrightnessValue = e.target.value;
 
         console.log({ newBrightnessValue })
@@ -125,7 +114,7 @@ document.addEventListener('click', (e) => {
 })
 
 document.addEventListener('input', (e) => {
-    if( e.target.classList.contains('brightness') ){
+    if (e.target.classList.contains('cartoon')) {
         let newBrightnessValue = e.target.value;
 
         console.log({ newBrightnessValue })
@@ -174,7 +163,7 @@ function putOriginalImageToCanvas(){
         filterTabData[i] = originalData[i];
     }
     context.putImageData( imgData, 0, 0 );
-    document.querySelector('.brightness').value = 50;
+    document.querySelector('.cartoon').value = 50;
     brightnessValue = 50;
 }
 
