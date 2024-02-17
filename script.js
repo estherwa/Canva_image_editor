@@ -12,8 +12,8 @@ let img;            // image object
 let filterTabData; // pixel array for filters tab
 let isFilterTabActive = false;
 let isToolsTabActive = true;
-let brightnessValue = 50;
-let opacityValue = 255;
+let brightnessValue = 0;
+
 let imgName;
 
 //WASM =============================================================
@@ -22,16 +22,10 @@ let bytes;     //WASM memory array
 
 let editorFunctions = {
     grayscale : 0,
-    negative : 0,
-    decreaseOpacity : 0,
-    increaseOpacity : 0,
+    negative: 0,
     decreaseBrightness : 0,
     increaseBrightness : 0,
-    red : 0,
-    green : 0,
-    blue : 0,
-    flipColumns : 0,
-    flipRows : 0,
+
     blurImage : 0
 }
 
@@ -46,19 +40,10 @@ fetch('WASM/final.wasm')
         editorFunctions.grayscale =  results.instance.exports.convertToGrayscale;
         editorFunctions.negative =  results.instance.exports.negative;
 
-        editorFunctions.decreaseOpacity =  results.instance.exports.decrease_opacity;
-        editorFunctions.increaseOpacity =  results.instance.exports.increase_opacity;
 
         editorFunctions.decreaseBrightness =  results.instance.exports.decrease_brightness;
         editorFunctions.increaseBrightness =  results.instance.exports.increase_brightness;
-        
-        editorFunctions.red =  results.instance.exports.red;
-        editorFunctions.green =  results.instance.exports.green;
-        editorFunctions.blue =  results.instance.exports.blue;
-        
-        editorFunctions.flipColumns =  results.instance.exports.flip_columns;
-        editorFunctions.flipRows =  results.instance.exports.flip_rows;
-        editorFunctions.blurImage =  results.instance.exports.blur;
+
     });
 
 // EVENT LISTENERS =================================================
@@ -84,9 +69,7 @@ fileInput.addEventListener('change', (e) => {
             growMemory( canvas.width, canvas.height );
             canvasDataToWASM_BytesArr();
             document.querySelector('.brightness').value = 50;
-            document.querySelector('.opacity').value = 255;
             brightnessValue = 50;
-            opacityValue = 255;
             enableButtons();
         }
     }
@@ -100,37 +83,10 @@ document.addEventListener('click', (e) => {
     if( classlist.contains('original-image') ){
         putOriginalImageToCanvas();
     }
-    // download button
-    else if ( classlist.contains('download') ){
-        var element = document.createElement('a');
-        element.setAttribute('href', canvas.toDataURL('image/jpeg', 1));
-        element.setAttribute('download', imgName);
-        document.body.appendChild(element);
-        element.click();
-        document.body.removeChild(element);
-    }
-    // flip-columns button
-    else if ( classlist.contains('flip-columns') ){
-        canvasDataToWASM_BytesArr();
-        editorFunctions.flipColumns( canvas.width, canvas.height );
-        WASM_BytesArrToCanvasData(0);
-        context.putImageData( imgData, 0, 0 );
-    }
+
+
     // flip-rows button
-    else if( classlist.contains('flip-rows') ){
-        canvasDataToWASM_BytesArr();
-        editorFunctions.flipRows( canvas.width, canvas.height );
-        WASM_BytesArrToCanvasData(0);
-        context.putImageData( imgData, 0, 0 );
-    }
-    // rotate 180 button
-    else if( classlist.contains('rotate180') ){
-        canvasDataToWASM_BytesArr();
-        editorFunctions.flipRows( canvas.width, canvas.height );
-        editorFunctions.flipColumns( canvas.width, canvas.height );
-        WASM_BytesArrToCanvasData(0);
-        context.putImageData( imgData, 0, 0 );
-    }
+
     // blur
     else if( classlist.contains('blur') ){
         console.time('blur');
@@ -144,26 +100,7 @@ document.addEventListener('click', (e) => {
     }
     // FILTERS
     // red
-    else if( classlist.contains('red') ){
-        filterTabDataToWASM_BytesArr();
-        editorFunctions.red( canvas.width, canvas.height );
-        WASM_BytesArrToCanvasData(0);
-        context.putImageData( imgData, 0, 0 );
-    }
-    // green
-    else if( classlist.contains('green') ){
-        filterTabDataToWASM_BytesArr();
-        editorFunctions.green( canvas.width, canvas.height );
-        WASM_BytesArrToCanvasData(0);
-        context.putImageData( imgData, 0, 0 );
-    }
-    // blue
-    else if( classlist.contains('blue') ){
-        filterTabDataToWASM_BytesArr();
-        editorFunctions.blue( canvas.width, canvas.height );
-        WASM_BytesArrToCanvasData(0);
-        context.putImageData( imgData, 0, 0 );
-    }
+
     // negative
     else if( classlist.contains('negative') ){
         filterTabDataToWASM_BytesArr();
@@ -178,10 +115,7 @@ document.addEventListener('click', (e) => {
         WASM_BytesArrToCanvasData(0);
         context.putImageData( imgData, 0, 0 );
     }
-    // apply changes button
-    else if( classlist.contains('apply-changes') ){
-        filterTabData = context.getImageData( 0, 0, canvas.width, canvas.height ).data;
-    }
+
 })
 
 document.addEventListener('input', (e) => {
@@ -201,24 +135,6 @@ document.addEventListener('input', (e) => {
             context.putImageData( imgData, 0, 0 );
         }
         brightnessValue = newBrightnessValue;
-    }
-    else if( e.target.classList.contains('opacity') ){
-        let newOpacityValue = e.target.value;
-        let changeInValue = newOpacityValue - opacityValue;
-        opacityValue = newOpacityValue;
-        console.log(opacityValue);
-        if( changeInValue < 0 ){
-            canvasDataToWASM_BytesArr();
-            editorFunctions.decreaseOpacity( canvas.width, canvas.height, -(changeInValue));
-            WASM_BytesArrToCanvasData( 0 );
-            context.putImageData( imgData, 0, 0 );
-        }
-        if( changeInValue > 0 ){
-            canvasDataToWASM_BytesArr();
-            editorFunctions.increaseOpacity( canvas.width, canvas.height, changeInValue );
-            WASM_BytesArrToCanvasData( 0 );
-            context.putImageData( imgData, 0, 0 );
-        }
     }
 });
 
@@ -251,9 +167,7 @@ function putOriginalImageToCanvas(){
     }
     context.putImageData( imgData, 0, 0 );
     document.querySelector('.brightness').value = 50;
-    document.querySelector('.opacity').value = 255;
     brightnessValue = 50;
-    opacityValue = 255;
 }
 
 function growMemory( width , height ){
