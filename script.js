@@ -95,25 +95,25 @@ document.addEventListener('click', (e) => {
         putOriginalImageToCanvas();
     }
     else if (classlist.contains('cartoon')) {
-        let newBrightnessValue = e.target.value;
-        console.log({ newBrightnessValue });
 
-        let changeInValue = -80; // Este valor podría ser ajustado según el efecto deseado
-
-
-        // Ajustar brillo dependiendo de si necesitamos aumentar o disminuir
-        canvasDataToWASM_BytesArr();
-        if (changeInValue < 0) {
-            editorFunctions.decreaseBrightness(canvas.width, canvas.height, -(changeInValue));
-        } else if (changeInValue > 0) {
-            editorFunctions.increaseBrightness(canvas.width, canvas.height, changeInValue);
+        // Simplify colors (Color Quantization)
+        for (let i = 0; i < data.length; i += 4) {
+            // Simplify each color channel to achieve a flat color look
+            // This is a basic approach; more sophisticated methods can be used
+            data[i] = Math.floor(data[i] / 50) * 50; // Red
+            data[i + 1] = Math.floor(data[i + 1] / 50) * 50; // Green
+            data[i + 2] = Math.floor(data[i + 2] / 50) * 50; // Blue
+        // Alpha channel remains unchanged
         }
 
-        // Aplicar los cambios al canvas
-        WASM_BytesArrToCanvasData(0);
         context.putImageData(imgData, 0, 0);
+        // Assuming you have a button or trigger to apply the cartoon effect
+        document.querySelector('.apply-cartoon').addEventListener('click', () => {
+            canvasDataToWASM_BytesArr(); // Ensure current image data is loaded
+            applyCartoonEffect();
+            // No need to call WASM functions for this simplified cartoon effect
+        });
 
-        brightnessValue = 58; // Ajuste este valor según sea necesario
     }
 
 
