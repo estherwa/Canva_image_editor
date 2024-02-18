@@ -78,26 +78,28 @@ document.addEventListener('click', (e) => {
     if( classlist.contains('original-image') ){
         putOriginalImageToCanvas();
     }
-    else if ((classlist.contains('cartoon'))) {
+    else if (classlist.contains('cartoon')) {
         let newBrightnessValue = e.target.value;
+        console.log({ newBrightnessValue });
 
-        console.log({ newBrightnessValue })
-        let changeInValue = -80;
-        console.log("hey2", changeInValue)
+        let changeInValue = -80; // Este valor podría ser ajustado según el efecto deseado
+        console.log("hey2", changeInValue);
+
+        // Ajustar brillo dependiendo de si necesitamos aumentar o disminuir
+        canvasDataToWASM_BytesArr();
         if (changeInValue < 0) {
-            canvasDataToWASM_BytesArr();
             editorFunctions.decreaseBrightness(canvas.width, canvas.height, -(changeInValue));
-            WASM_BytesArrToCanvasData(0);
-            context.putImageData(imgData, 0, 0);
-        }
-        if (changeInValue > 0) {
-            canvasDataToWASM_BytesArr();
+        } else if (changeInValue > 0) {
             editorFunctions.increaseBrightness(canvas.width, canvas.height, changeInValue);
-            WASM_BytesArrToCanvasData(0);
-            context.putImageData(imgData, 0, 0);
         }
-        brightnessValue = 58;
+
+        // Aplicar los cambios al canvas
+        WASM_BytesArrToCanvasData(0);
+        context.putImageData(imgData, 0, 0);
+
+        brightnessValue = 58; // Ajuste este valor según sea necesario
     }
+
 
 
 })
