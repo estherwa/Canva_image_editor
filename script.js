@@ -16,22 +16,22 @@ let isToolsTabActive = true;
 let imgName;
 
 //WASM =============================================================
-const memory = new WebAssembly.Memory({initial : 1});
+const memory = new WebAssembly.Memory({ initial: 1 });
 let bytes;     //WASM memory array
 
 let editorFunctions = {};
 
 fetch('WASM/final.wasm')
-    .then( response => response.arrayBuffer() )
-    .then( bytes =>
-        WebAssembly.instantiate( bytes, { 
-                js : { mem : memory}
+    .then(response => response.arrayBuffer())
+    .then(bytes =>
+        WebAssembly.instantiate(bytes, {
+            js: { mem: memory }
         })
     )
     .then(results => {
 
-        editorFunctions.decreaseBrightness =  results.instance.exports.decrease_brightness;
-        editorFunctions.increaseBrightness =  results.instance.exports.increase_brightness;
+        editorFunctions.decreaseBrightness = results.instance.exports.decrease_brightness;
+        editorFunctions.increaseBrightness = results.instance.exports.increase_brightness;
 
     });
 
@@ -67,17 +67,17 @@ fileInput.addEventListener('change', (e) => {
         img.src = event.target.result;
 
         // draw image on canvas
-        img.onload = ( e ) => {
-            context.clearRect( 0, 0, canvas.width, canvas.height );
+        img.onload = (e) => {
+            context.clearRect(0, 0, canvas.width, canvas.height);
             canvas.width = img.width;
             canvas.height = img.height;
-            context.drawImage( img, 0, 0, canvas.width, canvas.height);
+            context.drawImage(img, 0, 0, canvas.width, canvas.height);
 
-            imgData = context.getImageData( 0, 0, canvas.width, canvas.height );
+            imgData = context.getImageData(0, 0, canvas.width, canvas.height);
             data = imgData.data;
-            originalData = context.getImageData( 0, 0, canvas.width, canvas.height ).data;
-            filterTabData = context.getImageData( 0, 0, canvas.width, canvas.height ).data;
-            growMemory( canvas.width, canvas.height );
+            originalData = context.getImageData(0, 0, canvas.width, canvas.height).data;
+            filterTabData = context.getImageData(0, 0, canvas.width, canvas.height).data;
+            growMemory(canvas.width, canvas.height);
             canvasDataToWASM_BytesArr();
             document.querySelector('.cartoon').value = 50;
             brightnessValue = 50;
@@ -91,7 +91,7 @@ fileInput.addEventListener('change', (e) => {
 document.addEventListener('click', (e) => {
     let classlist = e.target.classList;
     // original-image button
-    if( classlist.contains('original-image') ){
+    if (classlist.contains('original-image')) {
         putOriginalImageToCanvas();
     }
     else if (classlist.contains('cartoon')) {
@@ -103,7 +103,7 @@ document.addEventListener('click', (e) => {
             data[i] = Math.floor(data[i] / 50) * 50; // Red
             data[i + 1] = Math.floor(data[i + 1] / 50) * 50; // Green
             data[i + 2] = Math.floor(data[i + 2] / 50) * 50; // Blue
-        // Alpha channel remains unchanged
+            // Alpha channel remains unchanged
         }
 
         context.putImageData(imgData, 0, 0);
@@ -116,65 +116,61 @@ document.addEventListener('click', (e) => {
 
     }
 
-
-
 })
-
-
 
 // function definitions======================================================
 
 // copy data from data array ( canvas data ) to WASM memory
-function canvasDataToWASM_BytesArr(){
-    for( let i = 0; i < data.length; i++){
+function canvasDataToWASM_BytesArr() {
+    for (let i = 0; i < data.length; i++) {
         bytes[i] = data[i];
     }
 }
 
-function filterTabDataToWASM_BytesArr(){
-    for( let i = 0; i < filterTabData.length; i++){
+function filterTabDataToWASM_BytesArr() {
+    for (let i = 0; i < filterTabData.length; i++) {
         bytes[i] = filterTabData[i];
     }
 }
 
 // copy data from WASM memory to data array ( canvas data )
-function WASM_BytesArrToCanvasData( offset ){
-    for( let i = 0; i < data.length; i++){
+function WASM_BytesArrToCanvasData(offset) {
+    for (let i = 0; i < data.length; i++) {
         data[i] = bytes[i + offset];
     }
 }
 
-function putOriginalImageToCanvas(){
-    for( let i = 0; i < data.length; i++){
+function putOriginalImageToCanvas() {
+    for (let i = 0; i < data.length; i++) {
         data[i] = originalData[i];
         filterTabData[i] = originalData[i];
     }
-    context.putImageData( imgData, 0, 0 );
+    context.putImageData(imgData, 0, 0);
     document.querySelector('.cartoon').value = 50;
     brightnessValue = 50;
 }
 
-function growMemory( width , height ){
+function growMemory(width, height) {
     // if memory required for image is less than present then do nothing
     let requiredBytes = width * height * 8;
-    if( requiredBytes < memory.buffer.byteLength ){
+    if (requiredBytes < memory.buffer.byteLength) {
         return;
     }
     // if more memory is required
     // one page = 64kB = 64*1024
-    let currentPages = memory.buffer.byteLength / ( 64 * 1024);
-    let pagesRequired = Math.ceil(requiredBytes / ( 64 * 1024)) - currentPages;
+    let currentPages = memory.buffer.byteLength / (64 * 1024);
+    let pagesRequired = Math.ceil(requiredBytes / (64 * 1024)) - currentPages;
     memory.grow(pagesRequired);
-    bytes = new Uint8ClampedArray( memory.buffer );
+    bytes = new Uint8ClampedArray(memory.buffer);
 }
 
-function enableButtons( ){
-    buttons.forEach( btn => {
+function enableButtons() {
+    buttons.forEach(btn => {
         btn.removeAttribute('disabled');
     });
 }
-function disableButtons( ){
-    buttons.forEach( btn => {
+function disableButtons() {
+    buttons.forEach(btn => {
         btn.addAttribute('disabled', '');
     });
 }
@@ -183,13 +179,13 @@ function disableButtons( ){
 const tabs = document.querySelectorAll('[data-tab-target]');
 const tabContents = document.querySelectorAll('[data-tab-content]');
 
-tabs.forEach( tab => {
+tabs.forEach(tab => {
     tab.addEventListener('click', (e) => {
         const target = document.querySelector(tab.dataset.tabTarget);
-        tabContents.forEach( tabContent => {
+        tabContents.forEach(tabContent => {
             tabContent.classList.remove('active');
         })
-        tabs.forEach( tab => {
+        tabs.forEach(tab => {
             tab.classList.remove('active');
         })
         target.classList.add('active');
