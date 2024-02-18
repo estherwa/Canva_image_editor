@@ -19,10 +19,7 @@ let imgName;
 const memory = new WebAssembly.Memory({initial : 1});
 let bytes;     //WASM memory array
 
-let editorFunctions = {
-    grayscale : 0,
-
-}
+let editorFunctions = {};
 
 fetch('WASM/final.wasm')
     .then( response => response.arrayBuffer() )
@@ -32,9 +29,6 @@ fetch('WASM/final.wasm')
         })
     )
     .then(results => {
-        editorFunctions.grayscale =  results.instance.exports.convertToGrayscale;
-        editorFunctions.negative =  results.instance.exports.negative;
-
 
         editorFunctions.decreaseBrightness =  results.instance.exports.decrease_brightness;
         editorFunctions.increaseBrightness =  results.instance.exports.increase_brightness;
@@ -179,20 +173,5 @@ tabs.forEach( tab => {
         target.classList.add('active');
         tab.classList.add('active');
 
-        if( tab.classList.contains('filters') && !isFilterTabActive ){
-            isFilterTabActive = true;
-            isToolsTabActive = false;
-            filterTabData = context.getImageData( 0, 0, canvas.width, canvas.height ).data;
-        }
-        if( tab.classList.contains('tools') && !isToolsTabActive ){
-            isFilterTabActive = false;
-            isToolsTabActive = true;
-            // copy pixels from filterTabData to data array for tools tab
-            // if changes are not applied in filters tab, the unchanged data gets copied
-            for (let i = 0; i < filterTabData.length; i++) {
-                data[i] = filterTabData[i];
-            }
-            context.putImageData( imgData, 0, 0);
-        }
     })
 })
