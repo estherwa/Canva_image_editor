@@ -35,6 +35,28 @@ fetch('WASM/final.wasm')
 
     });
 
+
+document.addEventListener('DOMContentLoaded', function () {
+    // Select the button by its ID.
+    var button = document.getElementById('cartoon');
+
+    // Add a click event listener to the button.
+    button.addEventListener('click', function () {
+        button.disabled = true;
+    });
+});
+
+//----------------------------------------------------------------
+document.addEventListener('DOMContentLoaded', function () {
+    // Select the button by its ID.
+    var button = document.getElementById('originalImage');
+
+    // Add a click event listener to the button.
+    button.addEventListener('click', function () {
+        document.getElementById('cartoon').disabled = false;
+    });
+});
+
 // EVENT LISTENERS =================================================
 fileInput.addEventListener('change', (e) => {
     let imageFile = e.target.files[0];
@@ -77,7 +99,7 @@ document.addEventListener('click', (e) => {
         console.log({ newBrightnessValue });
 
         let changeInValue = -80; // Este valor podría ser ajustado según el efecto deseado
-        console.log("hey2", changeInValue);
+
 
         // Ajustar brillo dependiendo de si necesitamos aumentar o disminuir
         canvasDataToWASM_BytesArr();
